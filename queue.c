@@ -39,7 +39,6 @@ queue_t *q_new()
 /* Free all storage used by queue */
 void q_free(queue_t *q)
 {
-    /* How about freeing the list elements and the strings? */
     if (q) {
         list_ele_t *tmp = q->head;
         while (q->head) {
@@ -49,8 +48,6 @@ void q_free(queue_t *q)
             free(tmp);
             tmp = q->head;
         }
-
-
         /* Free queue structure */
         free(q);
     }
@@ -66,25 +63,25 @@ void q_free(queue_t *q)
 bool q_insert_head(queue_t *q, char *s)
 {
     if (!q) {
-        printf("queue is NULL\n");
+        printf("The queue is NULL\n");
         return false;
     }
     /* What should you do if the q is NULL, malloc is NULL and s is NULL? */
     list_ele_t *newh = malloc(sizeof(list_ele_t));
-
+    /* fail to malloc*/
     if (!newh) {
         printf("Fail to allocate list\n");
         return false;
     }
     newh->value = malloc(strlen(s) + 1);
+    /* fail to malloc*/
     if (!newh->value) {
         printf("Fail to allocate value\n");
         free(newh);
         return false;
     }
-    /* Don't forget to allocate space for the string and copy it */
     strcpy(newh->value, s);
-
+    /* queue is empty before insert*/
     if (q->size == 0) {
         newh->next = NULL;
         q->size++;
@@ -126,9 +123,7 @@ bool q_insert_tail(queue_t *q, char *s)
         free(newt);
         return false;
     }
-
     strcpy(newt->value, s);
-
     if (!q->size) {
         q->size++;
         newt->next = NULL;
@@ -154,7 +149,6 @@ bool q_insert_tail(queue_t *q, char *s)
 */
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
-    /* You need to fix up this code. */
     if (!q) {
         printf("The queue is NULL\n");
         return false;
@@ -174,11 +168,8 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
         q->size--;
         free(q->head->value);
         free(q->head);
-        // free(q->tail);
         q->head = NULL;
         q->tail = NULL;
-        // free(q->tail->value);
-        // free(q->tail);
         return true;
     } else {
         list_ele_t *tmp = q->head;
@@ -215,39 +206,24 @@ void q_reverse(queue_t *q)
     if (!q) {
         printf("The queue is NULL\n");
     } else {
-        printf("in the reverse\n");
         int count = q->size;
         if (count > 0) {
             q->tail = q->head;
-
-
             list_ele_t *tmp_ele;
-            /*= malloc(sizeof(list_ele_t));*/  // malloc or not
-            // if(tmp_ele){
             list_ele_t *tmp_ele_next;
             tmp_ele = NULL;
             while (count > 0) {
-                // printf("count > 0  %d\n",count);
                 tmp_ele_next = tmp_ele;
-                // printf("1\n");
                 tmp_ele = q->head;
-                // printf("2\n");
-                // printf("%p\n",q->head);
                 q->head = q->head->next;
-                // printf("3\n");
                 tmp_ele->next = tmp_ele_next;
-                // printf("4\n");
                 count--;
             }
 
 
             q->tail->next = NULL;
             q->head = tmp_ele;
-            // free(tmp_ele);
-            //}
         } else
             printf("queue is empty\n");
     }
-
-    /* You need to write the code for this function */
 }
